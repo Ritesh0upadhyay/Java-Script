@@ -1,0 +1,82 @@
+// Get the first entry from previous node
+const data = $input.first().json;
+
+// Use your AI-generated summary or any other field from drag-and-drop
+const summaryText = data.Summary || "";
+
+// Build Education List dynamically
+let educationList = "";
+if (data.Education && Array.isArray(data.Education)) {
+  data.Education.forEach(e => {
+    educationList += `<li>${e.degree || ""} at ${e.university || ""} (${e.year || ""})</li>`;
+  });
+}
+
+// Build Experience List dynamically
+let experienceList = "";
+if (data.Experience && Array.isArray(data.Experience)) {
+  data.Experience.forEach(exp => {
+    let respHtml = "";
+    if (exp.responsibilities && Array.isArray(exp.responsibilities)) {
+      respHtml = "<ul>";
+      exp.responsibilities.forEach(r => {
+        respHtml += `<li>${r}</li>`;
+      });
+      respHtml += "</ul>";
+    }
+    experienceList += `<li>${exp.role || ""} at ${exp.company || ""} (${exp.duration || ""})${respHtml}</li>`;
+  });
+}
+
+// HTML Template
+const html = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resume</title>
+<style>
+  body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 40px; background: #f4f4f9; color: #333; }
+  .container { max-width: 800px; margin: auto; background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+  h1 { color: #2c3e50; }
+  h2 { color: #34495e; border-bottom: 2px solid #3498db; padding-bottom: 5px; margin-top: 20px; }
+  p, li { line-height: 1.5; }
+  ul { list-style-type: square; padding-left: 20px; }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>$('Edit Fields').first().json.Name</h1>
+    <p>Email:$('Edit Fields').first().json['Email ']  | Phone: $('Edit Fields').first().json.phone | LinkedIn:$('Edit Fields').first().json['linked in'] </p>
+
+    <h2>Summary</h2>
+    <p>$input.first().json.Summaryp>
+
+    <h2>Education</h2>
+    
+    <h2>Experience</h2>
+    <ul>
+      $('Edit Fields').first().json.Experience
+    </ul>
+
+    <h2>Skills</h2>
+    <p>$('Edit Fields').first().json.Skills</p>
+  </div>
+</body>
+</html>
+`;
+
+// Return HTML as binary for Webhook preview
+return [
+  {
+    json: {},
+    binary: {
+      data: {
+        data: Buffer.from(html).toString('base64'),
+        mimeType: 'text/html',
+        fileName: 'resume.html'
+      }
+    }
+  }
+];
