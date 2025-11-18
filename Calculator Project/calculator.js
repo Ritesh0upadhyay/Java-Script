@@ -10,6 +10,7 @@ function buttonClick(value){
     else{
         handleNumber(value);  
     }
+    //to update the screen after the button is clicked everytime.
     rerendder();
 };
 function handleOperator(operator){
@@ -20,10 +21,11 @@ function handleOperator(operator){
             runningTotal=0;
             break;      
         case "=": 
-            intScreenValue = parseInt(screenValue);   // Get the number user entered
-            flushOperation(intScreenValue);           // Use correct value
-            screenValue = runningTotal.toString();    // Show result
-            runningTotal = 0;                         // Reset for next operation
+            intScreenValue = parseInt(screenValue);   
+            flushOperation(intScreenValue);   
+            // to show the result after each step on screen        
+            screenValue = runningTotal.toString();    
+            runningTotal = 0;                       
             lastOperator = "";
             break;
         case "←":
@@ -45,6 +47,8 @@ function handleOperator(operator){
     }
 };
 function handleNumber(number){
+    //to check if the previous screen value is a operator so instead of appending the screen shows the 
+    //new number entered and the calculation can continue otherwise we will see NAn as the operator is multiplied with number.
     if(isNaN(screenValue)){screenValue=number}
     else if(screenValue==="0"){
         screenValue=number;
@@ -55,6 +59,8 @@ function handleNumber(number){
 function buttonValue(){
      
      document.querySelector(".calc-buttons").addEventListener("click", function(event){
+        //to check if the clicked element is a button or the click is done from the intersection
+        //of two of three buttons.
         if(event.target.matches("button")){
        buttonClick(event.target.innerText)
         }
@@ -81,6 +87,7 @@ function handleMath(operator){
     }
     
     lastOperator=operator;
+    //For showing the operator on the screen when user clicks on a operator.
     screenValue=operator;
    
 
